@@ -1,32 +1,110 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'package:baxify/const/color_constants.dart';
+import 'package:baxify/helpers/loading/loading_screen.dart';
+import 'package:baxify/screens/auth/bloc/auth_bloc.dart';
+import 'package:baxify/screens/auth/bloc/auth_event.dart';
+import 'package:baxify/screens/auth/bloc/auth_state.dart';
+import 'package:baxify/screens/auth/page/sign_in_page.dart';
+import 'package:baxify/screens/auth/page/sign_up_page.dart';
+import 'package:baxify/screens/auth/page/verify_email.dart';
+import 'package:baxify/screens/onboarding/page/onboarding_page.dart';
+import 'package:baxify/screens/tab_bar/page/tab_bar_page.dart';
+import 'package:baxify/services/auth/auth_service.dart';
+import 'package:baxify/services/auth/firebase_auth_provider.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  final prefs = await SharedPreferences.getInstance();
+  final showHome = prefs.getBool('showHome') ?? false;
+
+  runApp(MyApp(showHome: showHome));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool showHome;
+  const MyApp({Key? key, required this.showHome}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.blue,
-        ),
-        home: Scaffold(
-            body: Center(
-          child: Text("Hello"),
-        )));
+      title: 'Visionary Momas',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: ColorConstants.primaryColor,
+        unselectedWidgetColor: ColorConstants.textColorGrey,
+        scaffoldBackgroundColor: Colors.white,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: showHome ? const HomePage() : const OnboardingPage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AuthBloc>(
+      create: (context) => AuthBloc(FirebaseAuthProvider()),
+      child: const _HomePage(),
+    );
+  }
+}
+
+class _HomePage extends StatelessWidget {
+  const _HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    context.read<AuthBloc>().add(const AuthEventInitialized());
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          LoadingScreen().show(
+              context: context,
+              text: state.loadingText ?? "Please wait a moment");
+        } else {
+          LoadingScreen().hide();
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthStateLoggedInAndSetupDone) {
+          return const DashboardPage();
+        } else if (state is AuthStateLoggedIn) {
+          return const HomePage();
+        } else if (state is AuthStateVerification) {
+          return const VerifyEmailView();
+        } else if (state is AuthStateLoggedOut) {
+          return const SignUpPage();
+        } else if (state is AuthStateRegistering) {
+          return const SignUpPage();
+        } else if (state is ShowErrorState) {
+          return const SignUpPage();
+        } else if (state is ShowErrorStateLogin) {
+          return const SignInPage();
+        } else if (state is SignUpButtonEnableChangedState) {
+          return const SignUpPage();
+        } else if (state is SignInButtonEnableChangedState) {
+          return const SignInPage();
+        } else if (state is PageChangedState) {
+          return const SignUpPage();
+        } else if (state is SignInPageState) {
+          return const SignInPage();
+        } else {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
   }
 }
