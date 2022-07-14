@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:baxify/const/color_constants.dart';
@@ -13,8 +12,7 @@ import 'package:baxify/screens/auth/page/sign_in_page.dart';
 import 'package:baxify/screens/auth/page/sign_up_page.dart';
 import 'package:baxify/screens/auth/page/verify_email.dart';
 import 'package:baxify/screens/onboarding/page/onboarding_page.dart';
-import 'package:baxify/screens/tab_bar/page/tab_bar_page.dart';
-import 'package:baxify/services/auth/auth_service.dart';
+import 'package:baxify/screens/dashboard/page/dashboard_page.dart';
 import 'package:baxify/services/auth/firebase_auth_provider.dart';
 
 void main() async {
@@ -24,7 +22,9 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool('showHome') ?? false;
 
-  runApp(MyApp(showHome: showHome));
+  runApp(
+    MyApp(showHome: showHome),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -35,16 +35,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Visionary Momas',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: ColorConstants.primaryColor,
-        unselectedWidgetColor: ColorConstants.textColorGrey,
-        scaffoldBackgroundColor: Colors.white,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: showHome ? const HomePage() : const OnboardingPage(),
-    );
+        title: 'Baxify',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: ColorConstants.primaryColor,
+          unselectedWidgetColor: ColorConstants.textColorGrey,
+          scaffoldBackgroundColor: Colors.white,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: const DashboardPage()
+        //showHome ? const HomePage() : const OnboardingPage(),
+        );
   }
 }
 

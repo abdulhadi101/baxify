@@ -1,6 +1,10 @@
 class ValidationService {
-  static bool username(String text) {
+  static bool name(String text) {
     return text.length > 3;
+  }
+
+  static bool phonenumber(String text) {
+    return text.length > 9;
   }
 
   static bool email(String text) {

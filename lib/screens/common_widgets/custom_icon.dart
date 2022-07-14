@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:baxify/const/color_constants.dart';
 
 
+
 class CustomIcon extends StatelessWidget {
-  VoidCallback? onPressed;
-  IconData? iconData;
-  CustomIcon({
+  final VoidCallback? onPressed;
+  final IconData? iconData;
+  const CustomIcon({
     this.iconData,
     this.onPressed,
     Key? key,

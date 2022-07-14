@@ -114,7 +114,7 @@ class SignInContent extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MyTextField(
+            MyTextField2(
               myLabel: TextConstants.emailPlaceholder,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.emailAddress,
@@ -129,7 +129,7 @@ class SignInContent extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            MyTextField(
+            MyTextField2(
               myLabel: TextConstants.password,
               placeholder: TextConstants.passwordPlaceholderSignIn,
               controller: bloc.passwordControllerSignIn,

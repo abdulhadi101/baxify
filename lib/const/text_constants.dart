@@ -1,10 +1,9 @@
 class TextConstants {
-  // Common
-  static const String start = "Start";
+  
 
   // Onboarding
   static const String onboarding1Title = "Make Payment Across the Globe";
-  static const String onboarding2Title = "A fast way to buy Data Bundle";
+  static const String onboarding2Title = "A Fast Way to Buy Data Bundle";
   static const String onboarding3Title = "Pay for Cable TV Subscription";
 
   static const String onboarding1Description =
@@ -27,10 +26,11 @@ class TextConstants {
   static const String fullName = "Full Name";
 
   static const String fullNamePlaceholder = "Full name";
-  static const String usernameErrorText = 'Text is required';
+  static const String nameErrorText = 'Enter a valid Name';
 
   static const String phonenumber = "Phonenumber";
   static const String phonenumberPlaceholder = "Phone number";
+    static const String phoneErrorText = 'Enter a valid Number';
 
   static const String email = "Email";
   static const String emailPlaceholder = "Email";

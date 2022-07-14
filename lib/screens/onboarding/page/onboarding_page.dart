@@ -27,6 +27,7 @@ BlocProvider<OnboardingBloc> _buildBody(BuildContext context) {
       listener: (context, state) async {
         final prefs = await SharedPreferences.getInstance();
         prefs.setBool('showHome', true);
+        //if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (_) {

@@ -7,8 +7,7 @@ import 'package:baxify/screens/auth/bloc/auth_state.dart';
 import 'package:baxify/services/validation_service.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  static final firstNameController = TextEditingController();
-  static final lastNameController = TextEditingController();
+  static final fullNameController = TextEditingController();
   static final phonenumberController = TextEditingController();
   static final emailController = TextEditingController();
   static final passwordController = TextEditingController();
@@ -44,16 +43,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final email = event.email;
       final password = event.password;
-
       final fullName = event.fullName;
-  
       final phonenumber = event.phonenumber;
 
-
       try {
-        await provider.createUser(email: email, password: password, phonenumber: phonenumber, displayName: fullName);
+        await provider.createUser(
+            email: email,
+            password: password,
+            phonenumber: phonenumber,
+            displayName: fullName);
 
-    
         await provider.sendEmailVerification();
         emit(const AuthStateVerification(isLoading: false));
       } on Exception catch (e) {
@@ -199,14 +198,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   bool checkIfSignUpButtonEnabled() {
-    return firstNameController.text.isNotEmpty &&
+    return fullNameController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty &&
         confirmPasswordController.text.isNotEmpty;
   }
 
   bool checkValidatorsOfTextField() {
-    return ValidationService.username(firstNameController.text) &&
+    return ValidationService.name(fullNameController.text) &&
         ValidationService.email(emailController.text) &&
         ValidationService.password(passwordController.text) &&
         ValidationService.confirmPassword(

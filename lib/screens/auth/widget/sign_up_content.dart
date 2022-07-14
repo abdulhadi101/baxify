@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baxify/const/color_constants.dart';
-import 'package:baxify/const/path_constants.dart';
 import 'package:baxify/const/style_constants.dart';
 import 'package:baxify/const/text_constants.dart';
 import 'package:baxify/screens/common_widgets/my_button.dart';
@@ -37,7 +36,7 @@ class _SignUpContentState extends State<SignUpContent> {
               child: Container(
                 width: double.infinity,
                 height: double.infinity,
-                color: ColorConstants.primaryColor,
+                color: ColorConstants.secondaryColor,
                 child: Stack(
                   children: [
                     _createMainData(context),
@@ -53,57 +52,25 @@ class _SignUpContentState extends State<SignUpContent> {
 
   Widget _createMainData(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    Color.fromARGB(255, 135, 144, 220),
-                    ColorConstants.primaryColor,
-                  ],
-                  stops: [
-                    0.55,
-                    1,
-                  ],
-                ),
-              ),
-              height: 300.0,
-              child: Image.asset(
-                PathConstants.onboarding3,
-                fit: BoxFit.cover,
-              ),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            //height: double.infinity,
+            //  height: hw,
+            color: ColorConstants.secondaryColor,
+            child: Column(
+              children: [
+                _createTitle(),
+                const SizedBox(height: 20),
+                const SizedBox(height: 20),
+                createForm(context),
+                const SizedBox(height: 40),
+                _createContinueButton(context),
+                const SizedBox(height: 40),
+                Center(child: _loginButton(context)),
+              ],
             ),
-            Container(
-                decoration: const BoxDecoration(
-                  color: ColorConstants.secondaryColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40.0),
-                    topRight: Radius.circular(40.0),
-                  ),
-                ),
-                child: const SizedBox(height: 20)),
-            Container(
-              //  height: hw,
-              color: ColorConstants.secondaryColor,
-              child: Column(
-                children: [
-                  _createTitle(),
-                  const SizedBox(height: 20),
-
-                  const SizedBox(height: 20),
-                  createForm(context),
-                  const SizedBox(height: 40),
-                  _createContinueButton(context),
-                  const SizedBox(height: 40),
-                  Center(child: _loginButton(context)),
-                  const SizedBox(height: 30),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -117,23 +84,20 @@ class _SignUpContentState extends State<SignUpContent> {
     );
   }
 
-
-
   Widget createForm(BuildContext context) {
     final bloc = BlocProvider.of<AuthBloc>(context);
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         return Column(
           children: [
-            MyTextField(
+            MyTextField2(
               myLabel: TextConstants.fullNamePlaceholder,
               placeholder: TextConstants.fullNamePlaceholder,
-              controller: AuthBloc.firstNameController,
+              controller: AuthBloc.fullNameController,
               textInputAction: TextInputAction.next,
-              errorText: TextConstants.usernameErrorText,
+              errorText: TextConstants.nameErrorText,
               isError: state is ShowErrorState
-                  ? !ValidationService.username(
-                      AuthBloc.firstNameController.text)
+                  ? !ValidationService.name(AuthBloc.fullNameController.text)
                   : false,
               onTextChanged: () {
                 bloc.add(OnTextChangedEventSignUp());
@@ -141,7 +105,7 @@ class _SignUpContentState extends State<SignUpContent> {
             ),
             const SizedBox(height: 20),
             const SizedBox(height: 20),
-            MyTextField(
+            MyTextField2(
               myLabel: TextConstants.emailPlaceholder,
               placeholder: TextConstants.emailPlaceholder,
               textInputAction: TextInputAction.next,
@@ -156,23 +120,23 @@ class _SignUpContentState extends State<SignUpContent> {
               },
             ),
             const SizedBox(height: 20),
-            MyTextField(
+            MyTextField2(
               myLabel: TextConstants.phonenumberPlaceholder,
               placeholder: TextConstants.phonenumberPlaceholder,
               controller: AuthBloc.phonenumberController,
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.phone,
-              errorText: TextConstants.usernameErrorText,
+              errorText: TextConstants.phoneErrorText,
               isError: state is ShowErrorState
-                  ? !ValidationService.username(
-                      AuthBloc.firstNameController.text)
+                  ? !ValidationService.phonenumber(
+                      AuthBloc.phonenumberController.text)
                   : false,
               onTextChanged: () {
                 bloc.add(OnTextChangedEventSignUp());
               },
             ),
             const SizedBox(height: 20),
-            MyTextField(
+            MyTextField2(
               myLabel: TextConstants.password,
               placeholder: TextConstants.passwordPlaceholder,
               obscureText: true,
@@ -188,7 +152,7 @@ class _SignUpContentState extends State<SignUpContent> {
               },
             ),
             const SizedBox(height: 20),
-            MyTextField(
+            MyTextField2(
               myLabel: TextConstants.password,
               placeholder: TextConstants.confirmPasswordPlaceholder,
               obscureText: true,
@@ -215,14 +179,25 @@ class _SignUpContentState extends State<SignUpContent> {
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             return MyButton2(
-                title: TextConstants.continueto,
+                title: TextConstants.signUp,
                 isEnabled: state is SignUpButtonEnableChangedState
                     ? state.isEnable
                     : false,
                 onTap: () {
+                  final email = AuthBloc.emailController.text;
+                  final password = AuthBloc.passwordController.text;
+                  final fullName = AuthBloc.fullNameController.text;
+
+                  final phonenumber = AuthBloc.phonenumberController.text;
+
                   FocusScope.of(context).unfocus();
 
-                  context.read<AuthBloc>().add(PageChangedEvent());
+                  context.read<AuthBloc>().add(AuthEventRegister(
+                        email,
+                        password,
+                        fullName,
+                        phonenumber,
+                      ));
                 });
           },
         ));
