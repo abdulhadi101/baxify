@@ -1,4 +1,5 @@
 import 'package:baxify/const/color_constants.dart';
+import 'package:baxify/const/path_constants.dart';
 import 'package:baxify/screens/common_widgets/my_button.dart';
 import 'package:baxify/screens/common_widgets/my_text_field.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -45,7 +46,7 @@ class _DataWidgetState extends State<DataWidget> {
     "To my Number",
     "To new number",
   ];
-
+  bool tomyNumber = true;
   @override
   void dispose() {
     _amount.dispose();
@@ -65,6 +66,7 @@ class _DataWidgetState extends State<DataWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
@@ -81,7 +83,7 @@ class _DataWidgetState extends State<DataWidget> {
                         : Border.all(color: Colors.transparent),
                   ),
                   //    color: _value == 0 ? Colors.grey : Colors.transparent,
-                  child: const Icon(Icons.call),
+                  child: Image.asset(PathConstants.mtn),
                 ),
               ),
               const SizedBox(width: 4),
@@ -95,7 +97,7 @@ class _DataWidgetState extends State<DataWidget> {
                         ? Border.all(color: Colors.black)
                         : Border.all(color: Colors.transparent),
                   ),
-                  child: const Icon(Icons.message),
+                  child: Image.asset(PathConstants.glo),
                 ),
               ),
               GestureDetector(
@@ -108,7 +110,7 @@ class _DataWidgetState extends State<DataWidget> {
                         ? Border.all(color: Colors.black)
                         : Border.all(color: Colors.transparent),
                   ),
-                  child: const Icon(Icons.message),
+                  child: Image.asset(PathConstants.airtel),
                 ),
               ),
               GestureDetector(
@@ -121,7 +123,7 @@ class _DataWidgetState extends State<DataWidget> {
                         ? Border.all(color: Colors.black)
                         : Border.all(color: Colors.transparent),
                   ),
-                  child: const Icon(Icons.message),
+                  child: Image.asset(PathConstants.etisalat),
                 ),
               ),
               GestureDetector(
@@ -134,12 +136,11 @@ class _DataWidgetState extends State<DataWidget> {
                         ? Border.all(color: Colors.black)
                         : Border.all(color: Colors.transparent),
                   ),
-                  child: const Icon(Icons.message),
+                  child: Image.asset(PathConstants.smile),
                 ),
               ),
             ],
           ),
-          const Text("Amount"),
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: DropdownButtonHideUnderline(
@@ -210,51 +211,56 @@ class _DataWidgetState extends State<DataWidget> {
             ),
           ),
           Card(
-            child: RadioGroup<String>.builder(
-              spacebetween: 0,
-              horizontalAlignment: MainAxisAlignment.spaceAround,
-              activeColor: ColorConstants.primaryColor,
-              direction: Axis.horizontal,
-              textStyle: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.bold),
-              groupValue: _verticalGroupValue,
-              onChanged: (value) => setState(() {
-                _verticalGroupValue = value!;
-              }),
-              items: _status,
-              itemBuilder: (item) => RadioButtonBuilder(
-                item,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RadioGroup<String>.builder(
+                spacebetween: 0,
+                horizontalAlignment: MainAxisAlignment.spaceAround,
+                activeColor: ColorConstants.primaryColor,
+                direction: Axis.horizontal,
+                textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold),
+                groupValue: _verticalGroupValue,
+                onChanged: (value) => setState(() {
+                  _verticalGroupValue = value!;
+                  tomyNumber = !tomyNumber;
+                }),
+                items: _status,
+                itemBuilder: (item) => RadioButtonBuilder(
+                  item,
+                ),
               ),
             ),
           ),
-          Card(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("TO"), Text("07067058995")]),
-            ),
+          Container(
+            child: tomyNumber
+                ? const Card(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          leading: Text("TO"),
+                          trailing: Text("07067058995"),
+                        )),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                        MyTextField2(
+                            placeholder: "Enter Phone number",
+                            controller: _phonenumber,
+                            onTextChanged: () {},
+                            errorText: "",
+                            myLabel: "Beneficiary Number")
+                      ]),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Beneficiary Number"),
-                MyTextField2(
-                    placeholder: "Enter Phone number",
-                    controller: _phonenumber,
-                    onTextChanged: () {},
-                    errorText: "",
-                    myLabel: "")
-              ],
-            ),
-          ),
-          MyButton(title: "Buy Bundle", onTap: () {}),
+          MyButton(
+              title: "Buy Data Bundle",
+              onTap: () {
+                print("object");
+              }),
         ],
       ),
     );

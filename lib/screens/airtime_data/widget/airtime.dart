@@ -1,6 +1,10 @@
 import 'package:baxify/const/color_constants.dart';
 import 'package:baxify/const/path_constants.dart';
+import 'package:baxify/const/style_constants.dart';
+import 'package:baxify/screens/common_widgets/my_button.dart';
 import 'package:baxify/screens/common_widgets/my_text_field.dart';
+import 'package:baxify/services/api/api_service.dart';
+import 'package:baxify/utility/random_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
@@ -19,6 +23,8 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
   List<Widget> amount = [];
 
   String _verticalGroupValue = "To my Number";
+
+  bool tomyNumber = true;
 
   final List<String> _status = [
     "To my Number",
@@ -41,10 +47,12 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print(_value);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -103,75 +111,115 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
                   child: Image.asset(PathConstants.etisalat),
                 ),
               ),
-              GestureDetector(
-                onTap: () => setState(() => _value = 4),
-                child: Container(
-                  height: 56,
-                  width: 56,
-                  decoration: BoxDecoration(
-                    border: _value == 4
-                        ? Border.all(color: Colors.black)
-                        : Border.all(color: Colors.transparent),
-                  ),
-                  child: Image.asset(PathConstants.smile),
-                ),
-              ),
             ],
           ),
-          const Text("Amount"),
           TextField(
+            showCursor: true,
+            style: headingTextStyle1,
             controller: _amount,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              labelText: 'Enter the Value',
-            ),
-          ),
-          Card(
-            child: RadioGroup<String>.builder(
-              spacebetween: 0,
-              horizontalAlignment: MainAxisAlignment.spaceAround,
-              activeColor: ColorConstants.primaryColor,
-              direction: Axis.horizontal,
-              textStyle: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.bold),
-              groupValue: _verticalGroupValue,
-              onChanged: (value) => setState(() {
-                _verticalGroupValue = value!;
-              }),
-              items: _status,
-              itemBuilder: (item) => RadioButtonBuilder(
-                item,
-              ),
+              labelText: 'Amount',
+              labelStyle: TextStyle(fontSize: 24),
             ),
           ),
           Card(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("TO"), Text("07067058995")]),
+              padding: const EdgeInsets.all(8.0),
+              child: RadioGroup<String>.builder(
+                spacebetween: 0,
+                horizontalAlignment: MainAxisAlignment.spaceAround,
+                activeColor: ColorConstants.primaryColor,
+                direction: Axis.horizontal,
+                textStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold),
+                groupValue: _verticalGroupValue,
+                onChanged: (value) => setState(() {
+                  _verticalGroupValue = value!;
+
+                  tomyNumber = !tomyNumber;
+                }),
+                items: _status,
+                itemBuilder: (item) => RadioButtonBuilder(
+                  item,
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Beneficiary Number"),
-                  MyTextField2(
-                      placeholder: "Enter Phone number",
-                      controller: _phonenumber,
-                      onTextChanged: () {},
-                      errorText: "",
-                      myLabel: "")
-                ]),
+          Container(
+            child: tomyNumber
+                ? const Card(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          leading: Text("TO"),
+                          trailing: Text("07067058995"),
+                        )),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                        MyTextField2(
+                            placeholder: "Enter Phone number",
+                            controller: _phonenumber,
+                            onTextChanged: () {},
+                            errorText: "",
+                            myLabel: "Beneficiary Number")
+                      ]),
           ),
+          MyButton(
+              title: "Buy Airtime",
+              onTap: () {
+                String service_type;
+                String agentId;
+
+                if (_value == 0) {
+                  buyAirtime(
+                    service_type: "mtn",
+                  );
+                } else if (_value == 1) {
+                  buyAirtime(
+                    service_type: "glo",
+                  );
+                } else if (_value == 2) {
+                  buyAirtime(
+                    service_type: "airtel",
+                  );
+                } else if (_value == 3) {
+                  buyAirtime(
+                    service_type: "9mobile",
+                  );
+                } else {
+                  buyAirtime(
+                    service_type: "",
+                  );
+                }
+              }),
         ],
       ),
     );
+  }
+
+  void buyAirtime({
+    required String service_type,
+  }) {
+    String phonenumber;
+    if (tomyNumber) {
+      phonenumber = '';
+    } else {
+      phonenumber = _phonenumber.text;
+    }
+
+    var response = ApiService(queryparam: {
+      'phone': _phonenumber.text,
+      'amount': _amount.text,
+      'service_type': service_type,
+      'plan': 'prepaid',
+      'agentId': '207',
+      'agentReference': RandomStringGenerator.getBase64RandomString(16),
+    }).buyAirtime();
   }
 }

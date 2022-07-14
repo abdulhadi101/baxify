@@ -21,6 +21,10 @@ class _AirtimeDataState extends State<AirtimeData> {
       child: Scaffold(
         backgroundColor: Color.fromARGB(255, 214, 240, 243),
         appBar: AppBar(
+          iconTheme: const IconThemeData(
+            
+            color: ColorConstants.textBlack,
+          ),
           title: const Text(
             "Airtime & Data",
             style: TextStyle(color: ColorConstants.textBlack),
@@ -44,7 +48,11 @@ class _AirtimeDataState extends State<AirtimeData> {
                 labelPadding: const EdgeInsets.symmetric(vertical: 10),
                 tabs: [
                   Container(
-                      child: Text("Buy Airtime", style: tabTitleTextStyle)),
+                    child: Text(
+                      "Buy Airtime",
+                      style: tabTitleTextStyle,
+                    ),
+                  ),
                   Text(
                     "Buy Data",
                     style: tabTitleTextStyle,
@@ -61,6 +69,7 @@ class _AirtimeDataState extends State<AirtimeData> {
           child: const Padding(
             padding: EdgeInsets.only(top: 16.0),
             child: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 AirtimeWidget(),
                 DataWidget(),

@@ -2,7 +2,7 @@
 
 import 'package:baxify/const/color_constants.dart';
 import 'package:baxify/screens/airtime_data/page/airtime_data.dart';
-import 'package:baxify/services/api/api_airtime.dart';
+import 'package:baxify/services/api/api_service.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -50,6 +50,7 @@ class DashboardPage extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
+                      print("object");
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) {
@@ -80,20 +81,19 @@ class DashboardPage extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () {
-                 var response =  AirtimeService(queryparam: {
+                  var response = ApiService(queryparam: {
                     'phone': '07067058995',
                     'amount': '200',
                     'service_type': 'mtn',
                     'plan': 'prepaid',
                     'agentId': '207',
-                    'agentReference': 'dsd3erdfdhgs',
+                    'agentReference': 'hygyr768hhj',
                   }).buyAirtime();
-                  print("I have been clickec");
 
-                   
+                  print("I have been clickec");
+                  print(response);
                 },
                 child: const Text("Click Me"))
-              
           ],
         )
         // bottomNavigationBar: _createdBottomTabBar(context),

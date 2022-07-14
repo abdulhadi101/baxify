@@ -44,13 +44,13 @@ TextStyle tabTitleTextStyle = GoogleFonts.roboto(
 );
 
 TextStyle headingTextStyle = GoogleFonts.sora(
-  fontSize: 24,
+  fontSize: 16,
   color: ColorConstants.textBlack,
   fontWeight: FontWeight.bold,
 );
 TextStyle headingTextStyle1 = GoogleFonts.sora(
   fontSize: 24,
-  color: ColorConstants.white,
+  color: ColorConstants.textBlack,
   fontWeight: FontWeight.bold,
 );
 
