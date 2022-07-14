@@ -1,9 +1,14 @@
 import 'package:baxify/const/color_constants.dart';
 import 'package:baxify/const/path_constants.dart';
 import 'package:baxify/const/style_constants.dart';
+import 'package:baxify/helpers/loading/loading_screen.dart';
+import 'package:baxify/models/airtime_model.dart';
 import 'package:baxify/screens/common_widgets/my_button.dart';
 import 'package:baxify/screens/common_widgets/my_text_field.dart';
 import 'package:baxify/services/api/api_service.dart';
+import 'package:baxify/services/auth/auth_service.dart';
+import 'package:baxify/utility/dialogs/error_dialog.dart';
+import 'package:baxify/utility/dialogs/success_dialog.dart';
 import 'package:baxify/utility/random_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
@@ -17,6 +22,7 @@ class AirtimeWidget extends StatefulWidget {
 
 class _AirtimeWidgetState extends State<AirtimeWidget> {
   int _value = 0;
+  //String? currentUserNumber = AuthService.firebase().currentUserPhonenumber;
   late TextEditingController _amount;
   late TextEditingController _phonenumber;
 
@@ -47,7 +53,6 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print(_value);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
       child: Column(
@@ -150,12 +155,12 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
           ),
           Container(
             child: tomyNumber
-                ? const Card(
+                ? Card(
                     child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
                         child: ListTile(
-                          leading: Text("TO"),
-                          trailing: Text("07067058995"),
+                          leading: const Text("TO"),
+                          trailing: Text("currentUserNumber"!),
                         )),
                   )
                 : Column(
@@ -173,28 +178,30 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
           MyButton(
               title: "Buy Airtime",
               onTap: () {
-                String service_type;
-                String agentId;
+                FocusScope.of(context).requestFocus(FocusNode());
+
+                LoadingScreen()
+                    .show(context: context, text: "Please wait a moment");
 
                 if (_value == 0) {
                   buyAirtime(
-                    service_type: "mtn",
+                    serviceType: "mtn",
                   );
                 } else if (_value == 1) {
                   buyAirtime(
-                    service_type: "glo",
+                    serviceType: "glo",
                   );
                 } else if (_value == 2) {
                   buyAirtime(
-                    service_type: "airtel",
+                    serviceType: "airtel",
                   );
                 } else if (_value == 3) {
                   buyAirtime(
-                    service_type: "9mobile",
+                    serviceType: "9mobile",
                   );
                 } else {
                   buyAirtime(
-                    service_type: "",
+                    serviceType: "",
                   );
                 }
               }),
@@ -204,22 +211,38 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
   }
 
   void buyAirtime({
-    required String service_type,
-  }) {
+    required String serviceType,
+  }) async {
     String phonenumber;
     if (tomyNumber) {
-      phonenumber = '';
+      phonenumber = '07067058995';
     } else {
       phonenumber = _phonenumber.text;
     }
 
     var response = ApiService(queryparam: {
-      'phone': _phonenumber.text,
+      'phone': phonenumber,
       'amount': _amount.text,
-      'service_type': service_type,
+      'service_type': serviceType,
       'plan': 'prepaid',
       'agentId': '207',
       'agentReference': RandomStringGenerator.getBase64RandomString(16),
     }).buyAirtime();
+    var statuscode = await response.then((value) => value?.code);
+    var message =
+        await response.then((value) => value?.data.transactionMessage);
+
+    print(message);
+    print(statuscode.toString());
+
+    if (statuscode == 200) {
+      LoadingScreen().hide();
+
+      await showSuccessDialog(context, message!);
+    } else {
+      LoadingScreen().hide();
+
+      await showErrorDialog(context, "Something went wrong");
+    }
   }
 }

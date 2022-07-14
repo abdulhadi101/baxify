@@ -27,6 +27,9 @@ class AuthService implements AuthProvider {
   @override
   AuthUser? get currentUser => provider.currentUser;
 
+    @override
+  String? get currentUserPhonenumber => provider.currentUserPhonenumber;
+
   @override
   Future<void> logOut() => provider.logOut();
 

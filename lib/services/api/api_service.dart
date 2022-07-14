@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   final Map<String, dynamic>? queryparam;
+  static var response;
   //static var response;
   ApiService({this.queryparam});
   Future<AirtimeModel?> buyAirtime() async {
@@ -17,31 +18,23 @@ class ApiService {
         scheme: 'https',
         host: ApiConstants.apiBaseUrl,
         path: ApiConstants.airtimeRequest,
-        queryParameters: queryparam ??
-            {
-              'phone': '089989898877',
-              'amount': '200',
-              'service_type': 'mtn',
-              'plan': 'prepaid',
-              'agentId': '207',
-              'agentReference': 'swewwcweeq',
-            });
+        queryParameters: queryparam ?? {});
 
-    var response = await client.post(uri, headers: {
+     response = await client.post(uri, headers: {
       HttpHeaders.authorizationHeader: ApiConstants.authorization,
       HttpHeaders.contentTypeHeader: ApiConstants.contentType
     });
 
     if (response.statusCode == 200) {
       json = response.body;
-      print(json);
+      // print(json);
       return airtimeFromJson(json);
     } else {
       json = response.body;
-      print(json);
+      //print(json);
     }
 
-    return airtimeFromJson(json);
+    //return airtimeFromJson(json);
   }
 
   Future<DataRequest?> buyData() async {
@@ -50,18 +43,10 @@ class ApiService {
     var uri = Uri(
         scheme: 'https',
         host: ApiConstants.apiBaseUrl,
-        path: ApiConstants.databundleRequest,
-        queryParameters: queryparam ??
-            {
-              'phone': '089989898877',
-              'amount': '200',
-              'service_type': 'mtn',
-              'plan': 'prepaid',
-              'agentId': '207',
-              'agentReference': 'swewwcweeq',
-            });
+        path: ApiConstants.databundle,
+        queryParameters: queryparam ?? {});
 
-    var response = await client.post(uri, headers: {
+    var response = await client.get(uri, headers: {
       HttpHeaders.authorizationHeader: ApiConstants.authorization,
       HttpHeaders.contentTypeHeader: ApiConstants.contentType
     });
@@ -85,15 +70,7 @@ class ApiService {
         scheme: 'https',
         host: ApiConstants.apiBaseUrl,
         path: ApiConstants.databundleRequest,
-        queryParameters: queryparam ??
-            {
-              'phone': '089989898877',
-              'amount': '200',
-              'service_type': 'mtn',
-              'plan': 'prepaid',
-              'agentId': '207',
-              'agentReference': 'swewwcweeq',
-            });
+        queryParameters: queryparam ?? {});
 
     var response = await client.post(uri, headers: {
       HttpHeaders.authorizationHeader: ApiConstants.authorization,

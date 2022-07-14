@@ -19,6 +19,16 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
+  String? get currentUserPhonenumber {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.phoneNumber;
+    } else {
+      return null;
+    }
+  }
+
+  @override
   Future<void> logOut() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -66,17 +76,15 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<AuthUser> createUser({
-    required String email,
-    required String password,
-     String? displayName,
-    String? phonenumber
-  }) async {
+  Future<AuthUser> createUser(
+      {required String email,
+      required String password,
+      String? displayName,
+      String? phonenumber}) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
-        
       );
       final user = currentUser;
       if (user != null) {

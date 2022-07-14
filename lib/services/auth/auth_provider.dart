@@ -2,6 +2,7 @@ import 'package:baxify/services/auth/auth_user.dart';
 
 abstract class AuthProvider {
   AuthUser? get currentUser;
+    String? get currentUserPhonenumber;
 
   Future<AuthUser> createUser({
     required String email,
