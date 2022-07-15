@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-DataBundle dataBundleFromJson(String str) => DataBundle.fromJson(json.decode(str));
+DataBundle dataBundleFromJson(String str) =>
+    DataBundle.fromJson(json.decode(str));
 
 String dataBundleToJson(DataBundle data) => json.encode(data.toJson());
 
@@ -49,14 +50,14 @@ class Datum {
   String allowance;
   int price;
   String validity;
-  int datacode;
+  String datacode;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         name: json["name"],
         allowance: json["allowance"],
         price: json["price"],
         validity: json["validity"],
-        datacode: json["datacode"],
+        datacode: json["datacode"].toString(),
       );
 
   Map<String, dynamic> toJson() => {

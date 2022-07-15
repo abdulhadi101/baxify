@@ -20,7 +20,7 @@ class ApiService {
         path: ApiConstants.airtimeRequest,
         queryParameters: queryparam ?? {});
 
-     response = await client.post(uri, headers: {
+    response = await client.post(uri, headers: {
       HttpHeaders.authorizationHeader: ApiConstants.authorization,
       HttpHeaders.contentTypeHeader: ApiConstants.contentType
     });
@@ -43,10 +43,10 @@ class ApiService {
     var uri = Uri(
         scheme: 'https',
         host: ApiConstants.apiBaseUrl,
-        path: ApiConstants.databundle,
+        path: ApiConstants.databundleRequest,
         queryParameters: queryparam ?? {});
 
-    var response = await client.get(uri, headers: {
+    var response = await client.post(uri, headers: {
       HttpHeaders.authorizationHeader: ApiConstants.authorization,
       HttpHeaders.contentTypeHeader: ApiConstants.contentType
     });
@@ -69,7 +69,7 @@ class ApiService {
     var uri = Uri(
         scheme: 'https',
         host: ApiConstants.apiBaseUrl,
-        path: ApiConstants.databundleRequest,
+        path: ApiConstants.databundle,
         queryParameters: queryparam ?? {});
 
     var response = await client.post(uri, headers: {
@@ -83,7 +83,6 @@ class ApiService {
       return dataBundleFromJson(json);
     } else {
       json = response.body;
-      print(json);
     }
 
     return dataBundleFromJson(json);

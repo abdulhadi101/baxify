@@ -1,7 +1,14 @@
 import 'package:baxify/const/color_constants.dart';
 import 'package:baxify/const/path_constants.dart';
+import 'package:baxify/helpers/loading/loading_screen.dart';
+import 'package:baxify/models/databundle_model.dart';
 import 'package:baxify/screens/common_widgets/my_button.dart';
 import 'package:baxify/screens/common_widgets/my_text_field.dart';
+import 'package:baxify/services/api/api_service.dart';
+import 'package:baxify/services/auth/auth_service.dart';
+import 'package:baxify/utility/dialogs/error_dialog.dart';
+import 'package:baxify/utility/dialogs/success_dialog.dart';
+import 'package:baxify/utility/random_generator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,32 +22,16 @@ class DataWidget extends StatefulWidget {
 }
 
 class _DataWidgetState extends State<DataWidget> {
-  String? selectedbundle;
-  final List<String> _databundles = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-    '13',
-    '14',
-    '15',
-    '16',
-    '17'
-  ];
+  String? selectedDatacode;
+  String? selectedBundleAmount;
+  final List<ListTile> _databundles = [];
   int _value = 0;
+  String? currentUserNumber = AuthService.firebase().currentUserPhonenumber;
   late TextEditingController _amount;
   late TextEditingController _phonenumber;
 
   List<Widget> amount = [];
-
+  late var data_bundle_response;
   String _verticalGroupValue = "To my Number";
 
   final List<String> _status = [
@@ -145,70 +136,64 @@ class _DataWidgetState extends State<DataWidget> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton2(
-                isExpanded: true,
-                hint: Row(
-                  children: const [
-                    Text(
-                      'CHOOSE DATA BUNDLE',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-                items: _databundles
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
+              child: FutureBuilder(
+                  future: _getDataBundle(),
+                  builder: (context, snapshot) {
+                    return DropdownButton2(
+                      isExpanded: true,
+                      hint: Row(
+                        children: const [
+                          Text(
+                            'CHOOSE DATA BUNDLE',
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ))
-                    .toList(),
-                value: selectedbundle,
-                onChanged: (value) {
-                  setState(() {
-                    selectedbundle = value as String;
-                  });
-                },
-                icon: const Icon(
-                  Icons.arrow_drop_down_outlined,
-                ),
-                iconSize: 24,
-                iconEnabledColor: Colors.black,
-                iconDisabledColor: Colors.grey,
-                buttonHeight: 50,
-                //buttonWidth: 160,
-                buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-                buttonDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                ),
-                buttonElevation: 2,
-                itemHeight: 40,
-                itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                dropdownMaxHeight: 200,
-                //  dropdownWidth: 200,
-                dropdownPadding: null,
-                dropdownDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(0),
-                  color: Colors.white,
-                ),
-                dropdownElevation: 8,
-                scrollbarRadius: const Radius.circular(0),
-                scrollbarThickness: 6,
-                scrollbarAlwaysShow: true,
-                offset: const Offset(0, 0),
-              ),
+                        ],
+                      ),
+                      items: _databundles
+                          .map((item) => DropdownMenuItem<ListTile>(
+                              value: item, child: ListTile()))
+                          .toList(),
+                      value: selectedDatacode,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedDatacode = value as String;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.arrow_drop_down_outlined,
+                      ),
+                      iconSize: 24,
+                      iconEnabledColor: Colors.black,
+                      iconDisabledColor: Colors.grey,
+                      buttonHeight: 50,
+                      //buttonWidth: 160,
+                      buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                      buttonDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                      ),
+                      buttonElevation: 2,
+                      itemHeight: 40,
+                      itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                      dropdownMaxHeight: 200,
+                      //  dropdownWidth: 200,
+                      dropdownPadding: null,
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(0),
+                        color: Colors.white,
+                      ),
+                      dropdownElevation: 8,
+                      scrollbarRadius: const Radius.circular(0),
+                      scrollbarThickness: 6,
+                      scrollbarAlwaysShow: true,
+                      offset: const Offset(0, 0),
+                    );
+                  }),
             ),
           ),
           Card(
@@ -237,35 +222,142 @@ class _DataWidgetState extends State<DataWidget> {
           ),
           Container(
             child: tomyNumber
-                ? const Card(
+                ? Card(
                     child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
                         child: ListTile(
                           leading: Text("TO"),
-                          trailing: Text("07067058995"),
+                          trailing: Text(currentUserNumber!),
                         )),
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                        MyTextField2(
-                            placeholder: "Enter Phone number",
-                            controller: _phonenumber,
-                            onTextChanged: () {},
-                            errorText: "",
-                            myLabel: "Beneficiary Number")
-                      ]),
+                      MyTextField2(
+                          placeholder: "Enter Phone number",
+                          controller: _phonenumber,
+                          onTextChanged: () {},
+                          errorText: "",
+                          myLabel: "Beneficiary Number"),
+                    ],
+                  ),
           ),
           MyButton(
               title: "Buy Data Bundle",
               onTap: () {
-                if (kDebugMode) {
-                  print("object");
+                FocusScope.of(context).requestFocus(FocusNode());
+
+                LoadingScreen()
+                    .show(context: context, text: "Please wait a moment");
+
+                if (_value == 0) {
+                  buyData(
+                    serviceType: "mtn",
+                  );
+                } else if (_value == 1) {
+                  buyData(
+                    serviceType: "glo",
+                  );
+                } else if (_value == 2) {
+                  buyData(
+                    serviceType: "airtel",
+                  );
+                } else if (_value == 3) {
+                  buyData(
+                    serviceType: "9mobile",
+                  );
+                } else {
+                  buyData(
+                    serviceType: "smile",
+                  );
                 }
               }),
         ],
       ),
     );
+  }
+
+  void buyData({required String serviceType}) async {
+    String phonenumber;
+    if (tomyNumber) {
+      phonenumber = currentUserNumber!;
+    } else {
+      phonenumber = _phonenumber.text;
+    }
+
+    var response = ApiService(queryparam: {
+      'phone': phonenumber,
+      'amount': selectedBundleAmount,
+      'service_type': serviceType,
+      'datacode': selectedDatacode,
+      'agentId': '207',
+      'agentReference': RandomStringGenerator.getBase64RandomString(16),
+    }).buyData();
+    var statuscode = await response.then((value) => value?.code);
+    var message =
+        await response.then((value) => value?.data.transactionMessage);
+
+    print(message);
+    print(statuscode.toString());
+
+    if (statuscode == 200) {
+      LoadingScreen().hide();
+      _amount.dispose();
+      if (!mounted) return;
+      await showSuccessDialog(context, message!);
+    } else {
+      LoadingScreen().hide();
+      if (!mounted) return;
+      await showErrorDialog(context, "Something went wrong");
+    }
+  }
+
+  void getDataBundles({
+    required String serviceType,
+  }) async {
+    data_bundle_response = ApiService(
+      queryparam: {
+        'service_type': serviceType,
+      },
+    ).getDataBundles();
+
+    var statuscode = await data_bundle_response.then((value) => value?.code);
+    print(statuscode.toString());
+  }
+
+  Future<DataBundle?> _getDataBundle() async {
+    if (_value == 0) {
+      getDataBundles(
+        serviceType: "mtn",
+      );
+    } else if (_value == 1) {
+      getDataBundles(
+        serviceType: "glo",
+      );
+    } else if (_value == 2) {
+      getDataBundles(
+        serviceType: "airtel",
+      );
+    } else if (_value == 3) {
+      getDataBundles(
+        serviceType: "9mobile",
+      );
+    } else {
+      getDataBundles(
+        serviceType: "smile",
+      );
+    }
+    var json;
+    if (data_bundle_response.statusCode == 200) {
+      json = data_bundle_response.body;
+      print(json);
+      return dataBundleFromJson(json);
+    } else {
+      var json = data_bundle_response.body;
+      print(json);
+    }
+
+    return dataBundleFromJson(json);
   }
 }
