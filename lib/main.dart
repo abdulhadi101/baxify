@@ -35,17 +35,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Baxify',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: ColorConstants.primaryColor,
-          unselectedWidgetColor: ColorConstants.textColorGrey,
-          scaffoldBackgroundColor: Colors.white,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: const DashboardPage()
-        //showHome ? const HomePage() : const OnboardingPage(),
-        );
+      title: 'Baxify',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: ColorConstants.primaryColor,
+        unselectedWidgetColor: ColorConstants.textColorGrey,
+        scaffoldBackgroundColor: Colors.white,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: showHome ? const HomePage() : const OnboardingPage(),
+    );
   }
 }
 
@@ -78,10 +77,8 @@ class _HomePage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state is AuthStateLoggedInAndSetupDone) {
+        if (state is AuthStateLoggedIn) {
           return const DashboardPage();
-        } else if (state is AuthStateLoggedIn) {
-          return const HomePage();
         } else if (state is AuthStateVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {
@@ -96,8 +93,6 @@ class _HomePage extends StatelessWidget {
           return const SignUpPage();
         } else if (state is SignInButtonEnableChangedState) {
           return const SignInPage();
-        } else if (state is PageChangedState) {
-          return const SignUpPage();
         } else if (state is SignInPageState) {
           return const SignInPage();
         } else {

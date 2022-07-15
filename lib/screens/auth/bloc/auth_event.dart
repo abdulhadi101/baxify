@@ -27,7 +27,6 @@ class AuthEventRegister extends AuthEvent {
   final String email;
   final String password;
   final String fullName;
-
   final String phonenumber;
 
   const AuthEventRegister(

@@ -31,17 +31,6 @@ class AuthStateRegistering extends AuthState with EquatableMixin {
   List<Object?> get props => [exception, isLoading];
 }
 
-class PageChangedState extends AuthState {
-  final int counter;
-
-  const PageChangedState({
-    required this.counter,
-    required bool isLoading,
-  }) : super(
-          isLoading: isLoading,
-        );
-}
-
 class SignUpButtonEnableChangedState extends AuthState {
   final bool isEnable;
 
@@ -75,16 +64,6 @@ class ShowErrorStateLogin extends AuthState {
 class AuthStateLoggedIn extends AuthState {
   final AuthUser user;
   const AuthStateLoggedIn({
-    required this.user,
-    required bool isLoading,
-  }) : super(isLoading: isLoading);
-}
-
-class AuthStateLoggedInAndSetupDone extends AuthState {
-  final AuthUser user;
-  //final LocalCache ilocalCache;
-  const AuthStateLoggedInAndSetupDone({
-    //required this.ilocalCache,
     required this.user,
     required bool isLoading,
   }) : super(isLoading: isLoading);

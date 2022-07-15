@@ -18,7 +18,7 @@ class SignInContent extends StatelessWidget {
     return Container(
       //  height: double.infinity,
       // width: double.infinity,
-      color: ColorConstants.secondaryColor,
+      color: ColorConstants.background,
       child: SafeArea(
         child: Scaffold(
           body: Stack(
@@ -59,7 +59,7 @@ class SignInContent extends StatelessWidget {
               ),
               Container(
                   decoration: const BoxDecoration(
-                    color: ColorConstants.secondaryColor,
+                    color: ColorConstants.background,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40.0),
                       topRight: Radius.circular(40.0),
@@ -68,7 +68,7 @@ class SignInContent extends StatelessWidget {
                   child: const SizedBox(height: 20)),
               Container(
                 //height: double.infinity,
-                color: ColorConstants.secondaryColor,
+                color: ColorConstants.background,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -158,7 +158,7 @@ class SignInContent extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.normal,
-            color: ColorConstants.white,
+            color: ColorConstants.textBlack,
           ),
         ),
       ),
@@ -178,6 +178,7 @@ class SignInContent extends StatelessWidget {
             currState is SignInButtonEnableChangedState,
         builder: (context, state) {
           return MyButton(
+            
             title: TextConstants.login,
             isEnabled: state is SignInButtonEnableChangedState
                 ? state.isEnable
@@ -207,7 +208,7 @@ class SignInContent extends StatelessWidget {
             },
             child: const Text(
               TextConstants.signUp,
-              style: TextStyle(color: ColorConstants.textColor),
+              style: TextStyle(color: ColorConstants.textBlack),
             ));
       },
     );

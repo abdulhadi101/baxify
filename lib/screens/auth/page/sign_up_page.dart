@@ -11,7 +11,6 @@ import 'package:baxify/utility/dialogs/error_dialog.dart';
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(

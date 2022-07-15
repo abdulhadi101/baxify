@@ -45,21 +45,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final password = event.password;
       final fullName = event.fullName;
       final phonenumber = event.phonenumber;
+      if (checkValidatorsOfTextField()) {
+        try {
+          await provider.createUser(
+              email: email,
+              password: password,
+              phonenumber: phonenumber,
+              displayName: fullName);
 
-      try {
-        await provider.createUser(
-            email: email,
-            password: password,
-            phonenumber: phonenumber,
-            displayName: fullName);
-
-        await provider.sendEmailVerification();
-        emit(const AuthStateVerification(isLoading: false));
-      } on Exception catch (e) {
-        emit(AuthStateRegistering(
-          exception: e,
-          isLoading: false,
-        ));
+          await provider.sendEmailVerification();
+          emit(const AuthStateVerification(isLoading: false));
+        } on Exception catch (e) {
+          emit(AuthStateRegistering(
+            exception: e,
+            isLoading: false,
+          ));
+        }
+      } else {
+        emit(const ShowErrorState(isLoading: false));
       }
     });
 
@@ -184,16 +187,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<SignInPageEvent>((event, emit) {
       emit(const SignInPageState(isLoading: false));
-    });
-
-    on<PageChangedEvent>((event, emit) {
-      if (checkValidatorsOfTextField()) {
-        pageController.animateToPage(1,
-            duration: const Duration(milliseconds: 500), curve: Curves.ease);
-        emit(const PageChangedState(counter: 1, isLoading: false));
-      } else {
-        emit(const ShowErrorState(isLoading: false));
-      }
     });
   }
 

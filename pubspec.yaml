@@ -57,6 +57,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   group_radio_button: ^1.2.0
   dropdown_button2: ^1.6.3
+  awesome_notifications: ^0.6.21
+  firebase_messaging: ^12.0.0
 
 dev_dependencies:
   flutter_test:

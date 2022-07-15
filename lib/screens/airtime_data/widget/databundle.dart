@@ -3,6 +3,7 @@ import 'package:baxify/const/path_constants.dart';
 import 'package:baxify/screens/common_widgets/my_button.dart';
 import 'package:baxify/screens/common_widgets/my_text_field.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
@@ -259,7 +260,9 @@ class _DataWidgetState extends State<DataWidget> {
           MyButton(
               title: "Buy Data Bundle",
               onTap: () {
-                print("object");
+                if (kDebugMode) {
+                  print("object");
+                }
               }),
         ],
       ),

@@ -19,10 +19,9 @@ class _AirtimeDataState extends State<AirtimeData> {
       initialIndex: 0,
       length: 2,
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 214, 240, 243),
+        backgroundColor: ColorConstants.background,
         appBar: AppBar(
           iconTheme: const IconThemeData(
-            
             color: ColorConstants.textBlack,
           ),
           title: const Text(
@@ -30,7 +29,7 @@ class _AirtimeDataState extends State<AirtimeData> {
             style: TextStyle(color: ColorConstants.textBlack),
           ),
           elevation: 0,
-          backgroundColor: Color.fromARGB(255, 214, 240, 243),
+          backgroundColor: ColorConstants.background,
           primary: true,
           //    backgroundColor: ColorConstants.grey,
           bottom: PreferredSize(

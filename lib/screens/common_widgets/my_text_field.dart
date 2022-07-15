@@ -232,7 +232,7 @@ class MyTextField2State extends State<MyTextField2> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,7 +270,7 @@ class MyTextField2State extends State<MyTextField2> {
       textInputAction: widget.textInputAction,
       keyboardType: widget.keyboardType,
       style: const TextStyle(
-        color: ColorConstants.textColor,
+        color: ColorConstants.textBlack,
         fontSize: 16,
       ),
       decoration: InputDecoration(

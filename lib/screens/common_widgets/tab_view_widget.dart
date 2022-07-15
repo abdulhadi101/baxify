@@ -37,7 +37,7 @@ class TabViewWidget extends StatelessWidget {
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorWeight: 1.3,
             // indicator: BoxDecoration(color: Colors.amberAccent),
-            labelStyle: TextStyle(color: Colors.amber),
+            labelStyle: const TextStyle(color: Colors.amber),
             unselectedLabelColor: ColorConstants.grey,
             labelPadding: const EdgeInsets.symmetric(vertical: 10),
             tabs: [

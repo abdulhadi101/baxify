@@ -22,7 +22,7 @@ class FirebaseAuthProvider implements AuthProvider {
   String? get currentUserPhonenumber {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      return user.phoneNumber;
+      return user.photoURL;
     } else {
       return null;
     }
@@ -86,7 +86,12 @@ class FirebaseAuthProvider implements AuthProvider {
         email: email,
         password: password,
       );
+
+      FirebaseAuth.instance.currentUser?.updateDisplayName(displayName);
+      FirebaseAuth.instance.currentUser?.updatePhotoURL(phonenumber);
+
       final user = currentUser;
+
       if (user != null) {
         return user;
       } else {

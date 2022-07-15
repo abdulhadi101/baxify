@@ -1,3 +1,4 @@
+import 'package:baxify/screens/onboarding/bloc/onboarding_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baxify/const/color_constants.dart';
@@ -36,11 +37,14 @@ class _SignUpContentState extends State<SignUpContent> {
               child: Container(
                 width: double.infinity,
                 height: double.infinity,
-                color: ColorConstants.secondaryColor,
-                child: Stack(
-                  children: [
-                    _createMainData(context),
-                  ],
+                color: ColorConstants.background,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Stack(
+                    children: [
+                      _createMainData(context),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -57,7 +61,7 @@ class _SignUpContentState extends State<SignUpContent> {
           child: Container(
             //height: double.infinity,
             //  height: hw,
-            color: ColorConstants.secondaryColor,
+            color: ColorConstants.background,
             child: Column(
               children: [
                 _createTitle(),
@@ -65,7 +69,7 @@ class _SignUpContentState extends State<SignUpContent> {
                 const SizedBox(height: 20),
                 createForm(context),
                 const SizedBox(height: 40),
-                _createContinueButton(context),
+                _SignUpButton(context),
                 const SizedBox(height: 40),
                 Center(child: _loginButton(context)),
               ],
@@ -173,12 +177,14 @@ class _SignUpContentState extends State<SignUpContent> {
     );
   }
 
-  Widget _createContinueButton(BuildContext context) {
+  Widget _SignUpButton(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             return MyButton2(
+                textColors: ColorConstants.white,
+                color: ColorConstants.primaryColor,
                 title: TextConstants.signUp,
                 isEnabled: state is SignUpButtonEnableChangedState
                     ? state.isEnable
@@ -191,6 +197,8 @@ class _SignUpContentState extends State<SignUpContent> {
                   final phonenumber = AuthBloc.phonenumberController.text;
 
                   FocusScope.of(context).unfocus();
+
+                  //  context.read<AuthBloc>().add(PageChangedEvent());
 
                   context.read<AuthBloc>().add(AuthEventRegister(
                         email,
@@ -212,7 +220,7 @@ class _SignUpContentState extends State<SignUpContent> {
             },
             child: const Text(
               TextConstants.login,
-              style: TextStyle(color: ColorConstants.textColor),
+              style: TextStyle(color: ColorConstants.textBlack),
             ));
       },
     );

@@ -60,7 +60,7 @@ class MyButton2 extends StatelessWidget {
   const MyButton2(
       {Key? key,
       required this.title,
-      this.textColors = ColorConstants.textColor,
+      this.textColors = ColorConstants.textBlack,
       this.color = ColorConstants.primaryColor,
       this.isEnabled = true,
       required this.onTap})

@@ -22,7 +22,7 @@ class AirtimeWidget extends StatefulWidget {
 
 class _AirtimeWidgetState extends State<AirtimeWidget> {
   int _value = 0;
-  //String? currentUserNumber = AuthService.firebase().currentUserPhonenumber;
+  String? currentUserNumber = AuthService.firebase().currentUserPhonenumber;
   late TextEditingController _amount;
   late TextEditingController _phonenumber;
 
@@ -160,7 +160,7 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: ListTile(
                           leading: const Text("TO"),
-                          trailing: Text("currentUserNumber"!),
+                          trailing: Text(currentUserNumber!),
                         )),
                   )
                 : Column(
@@ -215,7 +215,7 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
   }) async {
     String phonenumber;
     if (tomyNumber) {
-      phonenumber = '07067058995';
+      phonenumber = currentUserNumber!;
     } else {
       phonenumber = _phonenumber.text;
     }
@@ -237,11 +237,12 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
 
     if (statuscode == 200) {
       LoadingScreen().hide();
-
+      _amount.dispose();
+      if (!mounted) return;
       await showSuccessDialog(context, message!);
     } else {
       LoadingScreen().hide();
-
+      if (!mounted) return;
       await showErrorDialog(context, "Something went wrong");
     }
   }
