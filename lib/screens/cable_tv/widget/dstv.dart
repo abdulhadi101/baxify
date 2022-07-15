@@ -2,41 +2,32 @@ import 'package:baxify/const/color_constants.dart';
 import 'package:baxify/const/path_constants.dart';
 import 'package:baxify/const/style_constants.dart';
 import 'package:baxify/helpers/loading/loading_screen.dart';
-import 'package:baxify/models/airtime_model.dart';
 import 'package:baxify/screens/common_widgets/my_button.dart';
 import 'package:baxify/screens/common_widgets/my_text_field.dart';
 import 'package:baxify/services/api/api_service.dart';
 import 'package:baxify/services/auth/auth_service.dart';
 import 'package:baxify/utility/dialogs/error_dialog.dart';
 import 'package:baxify/utility/dialogs/success_dialog.dart';
-import 'package:baxify/utility/notification.dart';
 import 'package:baxify/utility/random_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
-class AirtimeWidget extends StatefulWidget {
-  const AirtimeWidget({Key? key}) : super(key: key);
+class DSTV extends StatefulWidget {
+  const DSTV({Key? key}) : super(key: key);
 
   @override
-  State<AirtimeWidget> createState() => _AirtimeWidgetState();
+  State<DSTV> createState() => _DSTVState();
 }
 
-class _AirtimeWidgetState extends State<AirtimeWidget> {
+class _DSTVState extends State<DSTV> {
   int _value = 0;
   String? currentUserNumber = AuthService.firebase().currentUserPhonenumber;
   late TextEditingController _amount;
   late TextEditingController _phonenumber;
 
-  List<Widget> amount = [];
+  late String customerName = "";
 
-  String _verticalGroupValue = "To my Number";
-
-  bool tomyNumber = true;
-
-  final List<String> _status = [
-    "To my Number",
-    "To new number",
-  ];
+  String amount = " ";
 
   @override
   void dispose() {
@@ -60,6 +51,7 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          const Text("Select A DSTV Package"),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -74,7 +66,7 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
                         : Border.all(color: Colors.transparent),
                   ),
                   //    color: _value == 0 ? Colors.grey : Colors.transparent,
-                  child: Image.asset(PathConstants.mtn),
+                  child: Image.asset(PathConstants.premium),
                 ),
               ),
               const SizedBox(width: 4),
@@ -88,7 +80,7 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
                         ? Border.all(color: Colors.black)
                         : Border.all(color: Colors.transparent),
                   ),
-                  child: Image.asset(PathConstants.glo),
+                  child: Image.asset(PathConstants.compact),
                 ),
               ),
               GestureDetector(
@@ -101,7 +93,7 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
                         ? Border.all(color: Colors.black)
                         : Border.all(color: Colors.transparent),
                   ),
-                  child: Image.asset(PathConstants.airtel),
+                  child: Image.asset(PathConstants.family),
                 ),
               ),
               GestureDetector(
@@ -114,7 +106,20 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
                         ? Border.all(color: Colors.black)
                         : Border.all(color: Colors.transparent),
                   ),
-                  child: Image.asset(PathConstants.etisalat),
+                  child: Image.asset(PathConstants.access),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => setState(() => _value = 4),
+                child: Container(
+                  height: 56,
+                  width: 56,
+                  decoration: BoxDecoration(
+                    border: _value == 4
+                        ? Border.all(color: Colors.black)
+                        : Border.all(color: Colors.transparent),
+                  ),
+                  child: Image.asset(PathConstants.compactplus),
                 ),
               ),
             ],
@@ -125,59 +130,29 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
             controller: _amount,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              labelText: 'Amount',
+              labelText: 'Smart Card Number',
               labelStyle: TextStyle(fontSize: 24),
             ),
           ),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RadioGroup<String>.builder(
-                spacebetween: 0,
-                horizontalAlignment: MainAxisAlignment.spaceAround,
-                activeColor: ColorConstants.primaryColor,
-                direction: Axis.horizontal,
-                textStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold),
-                groupValue: _verticalGroupValue,
-                onChanged: (value) => setState(() {
-                  _verticalGroupValue = value!;
-
-                  tomyNumber = !tomyNumber;
+          ListTile(
+            leading: Text(customerName),
+            trailing: TextButton(
+                child: Text("Validate"),
+                onPressed: () {
+                  _getCurrentUserName();
                 }),
-                items: _status,
-                itemBuilder: (item) => RadioButtonBuilder(
-                  item,
-                ),
-              ),
-            ),
           ),
           Container(
-            child: tomyNumber
-                ? Card(
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: ListTile(
-                          leading: const Text("TO"),
-                          trailing: Text(currentUserNumber!),
-                        )),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                        MyTextField2(
-                            placeholder: "Enter Phone number",
-                            controller: _phonenumber,
-                            onTextChanged: () {},
-                            errorText: "",
-                            myLabel: "Beneficiary Number")
-                      ]),
-          ),
+              child: Card(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: ListTile(
+                  leading: const Text("Amount"),
+                  trailing: Text(amount),
+                )),
+          )),
           MyButton(
-              title: "Buy Airtime",
+              title: "Pay DSTV Subscription",
               onTap: () {
                 FocusScope.of(context).requestFocus(FocusNode());
 
@@ -216,15 +191,8 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
   void buyAirtime({
     required String serviceType,
   }) async {
-    String phonenumber;
-    if (tomyNumber) {
-      phonenumber = currentUserNumber!;
-    } else {
-      phonenumber = _phonenumber.text;
-    }
-
     var response = ApiService(queryparam: {
-      'phone': phonenumber,
+      'phone': '',
       'amount': _amount.text,
       'service_type': serviceType,
       'plan': 'prepaid',
@@ -240,7 +208,7 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
 
     if (statuscode == 200) {
       LoadingScreen().hide();
-      MyNotification().Notify();
+      _amount.dispose();
       if (!mounted) return;
       await showSuccessDialog(context, message!);
     } else {
@@ -249,4 +217,6 @@ class _AirtimeWidgetState extends State<AirtimeWidget> {
       await showErrorDialog(context, "Something went wrong");
     }
   }
+
+  void _getCurrentUserName() {}
 }

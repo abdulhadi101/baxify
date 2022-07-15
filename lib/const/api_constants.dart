@@ -5,9 +5,9 @@ class ApiConstants {
   static const String airtimeRequest = 'api/baxipay/services/airtime/request';
   static const String databundle = 'api/baxipay/services/databundle/bundles';
   static const String databundleRequest =
-      'api/baxipay/services/databundle/bundles/request';
+      'api/baxipay/services/databundle/request';
   static const String cableTVRequest =
-      'api/baxipay/services/multichoiceRequest';
+      'api/baxipay/services/multichoice/request';
   //  Request Headers
   static const String authorization =
       'Api-key 5adea9-044a85-708016-7ae662-646d59';

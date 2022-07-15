@@ -98,7 +98,7 @@ class SignInContent extends StatelessWidget {
       child: Text(
         TextConstants.login,
         style: TextStyle(
-          color: ColorConstants.textColor,
+          color: ColorConstants.textBlack,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),

@@ -87,4 +87,31 @@ class ApiService {
 
     return dataBundleFromJson(json);
   }
+
+ Future<DataBundle?> paySubscription() async {
+    var client = http.Client();
+    var json;
+    var uri = Uri(
+        scheme: 'https',
+        host: ApiConstants.apiBaseUrl,
+        path: ApiConstants.databundle,
+        queryParameters: queryparam ?? {});
+
+    var response = await client.post(uri, headers: {
+      HttpHeaders.authorizationHeader: ApiConstants.authorization,
+      HttpHeaders.contentTypeHeader: ApiConstants.contentType
+    });
+
+    if (response.statusCode == 200) {
+      json = response.body;
+      print(json);
+      return dataBundleFromJson(json);
+    } else {
+      json = response.body;
+    }
+
+    return dataBundleFromJson(json);
+  }
+
+
 }

@@ -16,4 +16,11 @@ class PathConstants {
   static const String airtel = 'assets/images/airtel.png';
   static const String etisalat = 'assets/images/9mobile.png';
   static const String smile = 'assets/images/smile.png';
+
+  static const String premium = 'assets/images/premium.png';
+  static const String compact = 'assets/images/compact.png';
+
+  static const String compactplus = 'assets/images/compact-plus.png';
+  static const String family = 'assets/images/family.png';
+  static const String access = 'assets/images/access.png';
 }

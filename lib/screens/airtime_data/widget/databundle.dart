@@ -7,7 +7,9 @@ import 'package:baxify/screens/common_widgets/my_text_field.dart';
 import 'package:baxify/services/api/api_service.dart';
 import 'package:baxify/services/auth/auth_service.dart';
 import 'package:baxify/utility/dialogs/error_dialog.dart';
+import 'package:baxify/utility/dialogs/infotmation_dialog.dart';
 import 'package:baxify/utility/dialogs/success_dialog.dart';
+import 'package:baxify/utility/notification.dart';
 import 'package:baxify/utility/random_generator.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -23,8 +25,15 @@ class DataWidget extends StatefulWidget {
 
 class _DataWidgetState extends State<DataWidget> {
   String? selectedDatacode;
-  String? selectedBundleAmount;
-  final List<ListTile> _databundles = [];
+  String? selectedBundleAmount = '1000';
+  final List<ListTile> _databundles = [
+    ListTile(
+      leading: Text(
+        "1.5GB 1-Month Mobile for Monthly",
+        style: TextStyle(color: ColorConstants.textBlack),
+      ),
+    ),
+  ];
   int _value = 0;
   String? currentUserNumber = AuthService.firebase().currentUserPhonenumber;
   late TextEditingController _amount;
@@ -80,7 +89,12 @@ class _DataWidgetState extends State<DataWidget> {
               ),
               const SizedBox(width: 4),
               GestureDetector(
-                onTap: () => setState(() => _value = 1),
+                onTap: () => setState(
+                  () {
+                    showInfoDialog(context, "Not currently available");
+                    _value = 0;
+                  },
+                ),
                 child: Container(
                   height: 56,
                   width: 56,
@@ -93,7 +107,10 @@ class _DataWidgetState extends State<DataWidget> {
                 ),
               ),
               GestureDetector(
-                onTap: () => setState(() => _value = 2),
+                onTap: () => setState(() {
+                  showInfoDialog(context, "Not currently available");
+                  _value = 0;
+                }),
                 child: Container(
                   height: 56,
                   width: 56,
@@ -106,7 +123,10 @@ class _DataWidgetState extends State<DataWidget> {
                 ),
               ),
               GestureDetector(
-                onTap: () => setState(() => _value = 3),
+                onTap: () => setState(() {
+                  showInfoDialog(context, "Not currently available");
+                  _value = 0;
+                }),
                 child: Container(
                   height: 56,
                   width: 56,
@@ -119,7 +139,10 @@ class _DataWidgetState extends State<DataWidget> {
                 ),
               ),
               GestureDetector(
-                onTap: () => setState(() => _value = 4),
+                onTap: () => setState(() {
+                  showInfoDialog(context, "Not currently available");
+                  _value = 0;
+                }),
                 child: Container(
                   height: 56,
                   width: 56,
@@ -133,69 +156,7 @@ class _DataWidgetState extends State<DataWidget> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: DropdownButtonHideUnderline(
-              child: FutureBuilder(
-                  future: _getDataBundle(),
-                  builder: (context, snapshot) {
-                    return DropdownButton2(
-                      isExpanded: true,
-                      hint: Row(
-                        children: const [
-                          Text(
-                            'CHOOSE DATA BUNDLE',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      items: _databundles
-                          .map((item) => DropdownMenuItem<ListTile>(
-                              value: item, child: ListTile()))
-                          .toList(),
-                      value: selectedDatacode,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedDatacode = value as String;
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.arrow_drop_down_outlined,
-                      ),
-                      iconSize: 24,
-                      iconEnabledColor: Colors.black,
-                      iconDisabledColor: Colors.grey,
-                      buttonHeight: 50,
-                      //buttonWidth: 160,
-                      buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-                      buttonDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white,
-                      ),
-                      buttonElevation: 2,
-                      itemHeight: 40,
-                      itemPadding: const EdgeInsets.only(left: 14, right: 14),
-                      dropdownMaxHeight: 200,
-                      //  dropdownWidth: 200,
-                      dropdownPadding: null,
-                      dropdownDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(0),
-                        color: Colors.white,
-                      ),
-                      dropdownElevation: 8,
-                      scrollbarRadius: const Radius.circular(0),
-                      scrollbarThickness: 6,
-                      scrollbarAlwaysShow: true,
-                      offset: const Offset(0, 0),
-                    );
-                  }),
-            ),
-          ),
+          newMethod(),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -256,25 +217,83 @@ class _DataWidgetState extends State<DataWidget> {
                     serviceType: "mtn",
                   );
                 } else if (_value == 1) {
-                  buyData(
-                    serviceType: "glo",
-                  );
+                  showInfoDialog(context, "Not currently available");
                 } else if (_value == 2) {
-                  buyData(
-                    serviceType: "airtel",
-                  );
+                  showInfoDialog(context, "Not currently available");
                 } else if (_value == 3) {
-                  buyData(
-                    serviceType: "9mobile",
-                  );
+                  showInfoDialog(context, "Not currently available");
                 } else {
-                  buyData(
-                    serviceType: "smile",
-                  );
+                  showInfoDialog(context, "Not currently available");
                 }
               }),
         ],
       ),
+    );
+  }
+
+  Padding newMethod() {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: DropdownButtonHideUnderline(
+          child: DropdownButton2(
+        isExpanded: true,
+        hint: Row(
+          children: const [
+            Text(
+              '1.5GB 1-Month Mobile for Monthly',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+        items: _databundles
+            .map((item) => DropdownMenuItem<ListTile>(
+                onTap: () {
+                  showErrorDialog(context,
+                      "You will be able to choose a plan in the next update");
+                },
+                value: item,
+                child: ListTile()))
+            .toList(),
+        value: selectedDatacode,
+        onChanged: (value) {
+          setState(() {
+            selectedDatacode = value.toString() as String;
+          });
+        },
+        icon: const Icon(
+          Icons.arrow_drop_down_outlined,
+        ),
+        iconSize: 24,
+        iconEnabledColor: Colors.black,
+        iconDisabledColor: Colors.grey,
+        buttonHeight: 50,
+        //buttonWidth: 160,
+        buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+        buttonDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+        ),
+        buttonElevation: 2,
+        itemHeight: 40,
+        itemPadding: const EdgeInsets.only(left: 14, right: 14),
+        dropdownMaxHeight: 200,
+        //  dropdownWidth: 200,
+        dropdownPadding: null,
+        dropdownDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(0),
+          color: Colors.white,
+        ),
+        dropdownElevation: 8,
+        scrollbarRadius: const Radius.circular(0),
+        scrollbarThickness: 6,
+        scrollbarAlwaysShow: true,
+        offset: const Offset(0, 0),
+      )),
     );
   }
 
@@ -290,7 +309,7 @@ class _DataWidgetState extends State<DataWidget> {
       'phone': phonenumber,
       'amount': selectedBundleAmount,
       'service_type': serviceType,
-      'datacode': selectedDatacode,
+      'datacode': '1000',
       'agentId': '207',
       'agentReference': RandomStringGenerator.getBase64RandomString(16),
     }).buyData();
@@ -303,7 +322,7 @@ class _DataWidgetState extends State<DataWidget> {
 
     if (statuscode == 200) {
       LoadingScreen().hide();
-      _amount.dispose();
+      MyNotification().Notify();
       if (!mounted) return;
       await showSuccessDialog(context, message!);
     } else {

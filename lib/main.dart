@@ -1,8 +1,8 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:baxify/const/color_constants.dart';
 import 'package:baxify/helpers/loading/loading_screen.dart';
 import 'package:baxify/screens/auth/bloc/auth_bloc.dart';
@@ -17,6 +17,17 @@ import 'package:baxify/services/auth/firebase_auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+          channelKey: 'key1',
+          channelName: 'baxify',
+          channelDescription: 'Remiinder to Renew your Data',
+          defaultColor: ColorConstants.primaryColor,
+          enableVibration: true),
+    ],
+  );
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   final prefs = await SharedPreferences.getInstance();
